@@ -1,0 +1,9 @@
+keyboard==0.13.5
+numpy==2.3.1
+openai==0.28.0
+openai_whisper==20240930
+playsound==1.2.2
+python-dotenv==1.1.1
+rich==14.0.0
+sounddevice==0.5.1
+twitchio==2.10.0
