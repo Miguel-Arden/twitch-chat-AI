@@ -71,7 +71,7 @@ class Bot(commands.Bot):
             chat_context = "\n".join(self.chat_history)
             
             response = openai.ChatCompletion.create( # there's 2 of these to configure the responding to chat messages and normal timed responses, idk why tbh
-                model="ft:gpt-4o-2024-08-06:personal:gregredone:BGaDmbYI",
+                model="gpt-4o",
                 messages=[
                     {
                         "role": "system",
@@ -114,7 +114,7 @@ class Bot(commands.Bot):
                         combined_context = f"{chat_context}\n Mig said: {self.transcribed_text}"
 
                         response = openai.ChatCompletion.create( #responding normally (timed message)
-                            model="ft:gpt-4o-2024-08-06:personal:gregredone:BGaDmbYI",
+                            model="gpt-4o",
                             messages=[
                                 {
                                     "role": "system",
