@@ -1,3 +1,5 @@
+SPOILER ALERT: THIS CODE IS BAD AND A NEW VERSION MAY BE OUT SOON TO COMBAT THIS CRAP CODE
+
 Hello! This is a random project I made over the past few months, hope you can find some form of use out of this.
 
 I will now give you a general breakdown on how to use this.
