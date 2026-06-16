@@ -1,3 +1,8 @@
-/.venv
-/.vscode
-__pycache__
+.env
+.vscode/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+desktop.ini

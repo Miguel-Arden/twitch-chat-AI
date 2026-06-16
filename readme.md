@@ -1,8 +1,10 @@
-SPOILER ALERT: THIS CODE IS BAD AND A NEW VERSION MAY BE OUT SOON TO COMBAT THIS CRAP CODE
+## Twitch chat AI V2
+SPOILER ALERT: THIS CODE IS BAD AND WILL BE CONFUSING TO SETUP BUT I TRIED My BEST TO WRITE GOOD INSTRUCTIONS
+If you're struggling I'm happy to help, otherwise just ask chatGPT or something.
 
-Hello! This is a random project I made over the past few months, hope you can find some form of use out of this.
+Use AI to make your Twitch chat alive!
 
-I will now give you a general breakdown on how to use this.
+## Setup
 
 So before you do anything you need to do the following:
 - Install Python (https://www.python.org/downloads/) if you haven't already. I'm currently on version 3.12.8, but I'm 90% sure any version will work.
@@ -29,15 +31,18 @@ Then we need to add credits to our OpenAI account, to actually be able to use it
 - Click your profile on the top right
 - Click "Your profile"
 - Then click "Billing" on the left side
-- Click "Add to credit balance" and then add your payment method and then pay. For me, I used this 3 times a week for about 2-3 hours at a time, and it'd normally take like
-3-5 weeks for my credits to run out. I don't advise enabling auto recharge unless you don't care about money.
+- Click "Add to credit balance" and then add your payment method and then pay. I recommend using a cheap model, you can read about the
+prices of models at https://openai.com/api/pricing/ Ouput pricing isn't really relevant, input is. Most of the tokens this AI uses are input
 
 Go to Chatbot.py and change line 43 to your Twitch channel name, or whatever channel you want the AI to speak in. If the AI doesn't talk, give it Mod and it should work. However
 this probably isn't vital, mine works without this step
 
 I recommend messing with the prompt in Prompts.py to get the AI tailored to your stream, the one I provided should work well in general speaking.
 
-Another thing that can help with how the AI talks is fine-tuning on OpenAI. Look into it if the AI doesn't respond to things the way you want.
+## Finetuning
+
+I would advise looking into OpenAI finetuning to get a realistic result. The AI might be a bit unbearable without this.
+Make sure to use a cheap model when you do this step.
 
 If anything doesn't work, just ask ChatGPT, that will help you more than I can.
 
