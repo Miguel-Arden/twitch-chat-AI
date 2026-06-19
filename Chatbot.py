@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 from twitchio.ext import commands
 import os
 from dotenv import load_dotenv
@@ -10,15 +10,16 @@ import sounddevice as sd
 import numpy as np
 import queue
 from rich import print as rprint
-from Prompts import GREG_SYSTEM_PROMPT, ANY_STREAMER
+from Prompts import ANY_STREAMER
 
 load_dotenv()
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
+client = OpenAI(
+    api_key = os.getenv("OPENAI_API_KEY")
+)
 
 whisper_model = whisper.load_model("base")
 audio_queue = queue.Queue()
-
 
 def audio_callback(indata, frames, time, status):
     if status:
@@ -53,6 +54,8 @@ class Bot(commands.Bot):
         self.cached_stream_title = "No stream info available"
         self.last_stream_fetch_time = 0
         self.stream_fetch_interval = 300  # fetch every 5 minutes
+
+        
 
     async def get_stream_info(self):
         current_time = time.time()
@@ -94,9 +97,9 @@ class Bot(commands.Bot):
                 stream_title = await self.get_stream_info()
                 dynamic_prompt = ANY_STREAMER + f"\n\n***CURRENT STREAM***\nstream title is: {stream_title}"
 
-                response = openai.ChatCompletion.create( # there's 2 of these to configure the responding to chat messages and normal timed responses, idk why tbh I vibecoded this one
+                response = client.responses.create( # there's 2 of these to configure the responding to chat messages and normal timed responses, idk why tbh I vibecoded this one
                     model="gpt-4o",
-                    messages=[
+                    input=[
                         {
                             "role": "system",
                             "content": dynamic_prompt
@@ -106,11 +109,21 @@ class Bot(commands.Bot):
                             "content": chat_context
                         }
                     ],
-                    max_tokens=35,
+                    max_output_tokens=35,
                     temperature=1.0
                 )
 
-                bot_message = response.choices[0].message.content.strip()
+                self.session_tokens = 0
+                self.session_input_tokens = 0
+                self.session_output_tokens = 0
+
+                print(
+                    f"tokens used: {response.usage.total_tokens}\n "
+                    f"session total: {self.session_tokens}\n "
+                    f"input tokens used: {self.session_input_tokens}\n "
+                )
+
+                bot_message = response.output_text.strip()
 
                 channel = self.connected_channels[0]
                 await asyncio.sleep(1)
@@ -134,7 +147,7 @@ class Bot(commands.Bot):
 
                     if current_time - self.last_message_time >= self.message_cooldown:
                         print("Transcribing microphone audio...")
-                        self.transcribed_text = transcribe_audio()
+                        self.transcribed_text = await asyncio.to_thread(transcribe_audio)
                         print(f"Original Transcribed text: {self.transcribed_text}")
 
                         if not self.transcribed_text or len(self.transcribed_text.strip()) < 6:
@@ -158,11 +171,11 @@ class Bot(commands.Bot):
                             print(f"Context that greg is seeing: {combined_context}")
 
                             stream_title = await self.get_stream_info()
-                            dynamic_prompt = GREG_SYSTEM_PROMPT + f"\n\n***CURRENT STREAM***\nstream title is: {stream_title}"
+                            dynamic_prompt = ANY_STREAMER + f"\n\n***CURRENT STREAM***\nstream title is: {stream_title}"
 
-                            response = openai.ChatCompletion.create(
+                            response = client.responses.create(
                                 model="gpt-4o",
-                                messages=[
+                                input=[
                                     {
                                         "role": "system",
                                         "content": dynamic_prompt
@@ -172,11 +185,21 @@ class Bot(commands.Bot):
                                         "content": combined_context
                                     }
                                 ],
-                                max_tokens=40,
+                                max_output_tokens=40,
                                 temperature=1.0
                             )
 
-                            message = response.choices[0].message.content.strip()
+                            self.session_tokens = 0
+                            self.session_input_tokens = 0
+                            self.session_output_tokens = 0
+
+                            print(
+                                f"tokens used: {response.usage.total_tokens}\n "
+                                f"session total: {self.session_tokens}\n "
+                                f"input tokens used: {self.session_input_tokens}\n "
+                            )
+
+                            message = response.output_text.strip()
 
                             channel = self.connected_channels[0]
                             await channel.send(message)
