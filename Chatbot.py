@@ -54,8 +54,9 @@ class Bot(commands.Bot):
         self.cached_stream_title = "No stream info available"
         self.last_stream_fetch_time = 0
         self.stream_fetch_interval = 300  # fetch every 5 minutes
-
-        
+        self.session_tokens = 0
+        self.session_input_tokens = 0
+        self.session_output_tokens = 0
 
     async def get_stream_info(self):
         current_time = time.time()
@@ -113,14 +114,15 @@ class Bot(commands.Bot):
                     temperature=1.0
                 )
 
-                self.session_tokens = 0
-                self.session_input_tokens = 0
-                self.session_output_tokens = 0
+                self.session_tokens += response.usage.total_tokens
+                self.session_input_tokens += response.usage.input_tokens
+                self.session_output_tokens += response.usage.output_tokens
 
                 print(
-                    f"tokens used: {response.usage.total_tokens}\n "
-                    f"session total: {self.session_tokens}\n "
-                    f"input tokens used: {self.session_input_tokens}\n "
+                    f"tokens used: {response.usage.total_tokens}\n"
+                    f"session total: {self.session_tokens}\n"
+                    f"input tokens used: {self.session_input_tokens}\n"
+                    f"output tokens used: {self.session_output_tokens}"
                 )
 
                 bot_message = response.output_text.strip()
@@ -189,14 +191,15 @@ class Bot(commands.Bot):
                                 temperature=1.0
                             )
 
-                            self.session_tokens = 0
-                            self.session_input_tokens = 0
-                            self.session_output_tokens = 0
+                            self.session_tokens += response.usage.total_tokens
+                            self.session_input_tokens += response.usage.input_tokens
+                            self.session_output_tokens += response.usage.output_tokens
 
                             print(
-                                f"tokens used: {response.usage.total_tokens}\n "
-                                f"session total: {self.session_tokens}\n "
-                                f"input tokens used: {self.session_input_tokens}\n "
+                                f"tokens used: {response.usage.total_tokens}\n"
+                                f"session total: {self.session_tokens}\n"
+                                f"input tokens used: {self.session_input_tokens}\n"
+                                f"output tokens used: {self.session_output_tokens}"
                             )
 
                             message = response.output_text.strip()
